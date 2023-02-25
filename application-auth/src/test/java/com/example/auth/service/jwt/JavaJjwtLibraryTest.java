@@ -1,6 +1,5 @@
 package com.example.auth.service.jwt;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,9 +21,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JavaJjwtLibraryTest {
 
-
+    /**
+     * signed_jwt(jws)를 만들고 이를 parsing, payload를 검증하는 테스트
+     *
+     * iss (Issuer) : JWT를 발급한 주체
+     * sub (Subject) : JWT의 발급의 목적(주제)
+     * aud (Audience) : JWT 발급받은 수신자
+     * - 해당 값으로 식별이 가능해야합니다.
+     * exp (Expiration Time) : JWT 만료시간
+     * nbf (Not Before) : JWT 활성화 시간
+     * iat (Issued At) : JWT 발급 시간
+     * jti (JWT ID) : JWT 발급의 Unique ID
+     *
+     * create 로직
+     * 1. jwt에 sign할 Key를 생성합니다. 여기서는 (JS256 알고리즘을 사용)
+     * 2. 만들어진 key의 base64SecretBytes를 생성합니다. 이것은 생성된 키를 테스트 이외에서도 사용하기 위해서 입니다.
+     * 3. signed jwt를 생성합니다.
+     *
+     * verify 로직
+     * 1. jws를 base64SecretBytes를 이용하여 parsing 합니다.
+     * 2.parsing된 payload 필드를 검증합니다.
+     */
     @Test
-    public void signed_jwt_create_with_registered_fields() {
+    public void signed_jwt_create_and_verify_with_registered_fields() {
         // given
         String issuer = "Karol";
         String subject = "Auth";
@@ -38,7 +57,7 @@ public class JavaJjwtLibraryTest {
         final byte[] secretBytes = secret.getEncoded();
         final String base64SecretBytes = Base64.getEncoder().encodeToString(secretBytes);
 
-        // when
+        // when (create)
         var key = Keys
                 .hmacShaKeyFor(secretBytes);
 
@@ -53,26 +72,18 @@ public class JavaJjwtLibraryTest {
                 .signWith(key)
                 .compact();
 
-        // then
+        // peak
         System.out.println(jws);
         System.out.println(base64SecretBytes);
-    }
 
-    @Test
-    public void signed_jwt_verify_with_registered_fields() {
-        // given
-        String jws = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJLYXJvbCIsInN1YiI6IkF1dGgiLCJhdWQiOiJLYXJvbCIsImV4cCI6MTY3NjkwNzQyMywibmJmIjoxNjc2ODIxMDIzLCJpYXQiOjE2NzY4MjEwMjMsImp0aSI6IjNmNWZlMmUzLWJiM2MtNDBiNy04OTY0LWZkZmQzMjNmY2IwNyJ9.-AqaERWZj1_pc1bTrGNNZrqRmZ1zfg-4iD9lygZH5f0";
-
-        // when
-        final Key secret = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        final byte[] secretBytes = secret.getEncoded();
-
+        // when (verify)
         var jwtSubject = Jwts.parserBuilder()
-                .setSigningKey(Base64.getDecoder().decode("wbi3STeA4B2VG/LkXLiVf7zRjekTBeGZYyZvYrCcb4s="))
+                .setSigningKey(Base64.getDecoder().decode(base64SecretBytes))
                 .build();
 
         var parseClaimsJws = jwtSubject.parseClaimsJws(jws).getBody();
 
+        // then
         assertEquals(parseClaimsJws.getIssuer(), "Karol");
         assertEquals(parseClaimsJws.getSubject(), "Auth");
         assertEquals(parseClaimsJws.getAudience(), "Karol");
@@ -82,8 +93,23 @@ public class JavaJjwtLibraryTest {
         assertDoesNotThrow(() -> UUID.fromString(parseClaimsJws.getId()));
     }
 
+    /**
+     * 커스텀(private) 필드가 많은 signed_jwt를 생성 및 검증합니다.
+     *
+     * 생성되는 payload는 아래와 같습니다.
+     * {
+     *   "email": "koangho93@naver.com",
+     *   "user": {
+     *     "nickname": "karol",
+     *     "age": 31
+     *   }
+     * }
+     *
+     * JacksonSerializer / JacksonDeserializer를 사용합니다.
+     * 필드 일부를 propertiy를 파싱하기 위해서는 json value인 key로 가져온 후 objectMapper로 파싱합니다.
+     */
     @Test
-    public void signed_jwt_create_with_private_field() throws JsonProcessingException {
+    public void signed_jwt_create_with_private_field() {
         // given
         String email = "koangho93@naver.com";
         JwtUserDummy jwtUserDummy = new JwtUserDummy("karol", 31);
@@ -117,18 +143,16 @@ public class JavaJjwtLibraryTest {
 
         // then
         assertEquals(parseClaimsJws.get("email", String.class), email);
-        assertEquals(objectMapper.convertValue(parseClaimsJws.get("user"), JwtUserDummy.class).toString(), jwtUserDummy.toString());
+        assertEquals(
+                objectMapper.convertValue(parseClaimsJws.get("user"), JwtUserDummy.class).toString(),
+                jwtUserDummy.toString()
+        );
     }
 
     /**
-     * iss (Issuer) : JWT를 발급한 주체
-     * sub (Subject) : JWT의 발급의 목적(주제)
-     * aud (Audience) : JWT 발급받은 수신자
-     * - 해당 값으로 식별이 가능해야합니다.
-     * exp (Expiration Time) : JWT 만료시간
-     * nbf (Not Before) : JWT 활성화 시간
-     * iat (Issued At) : JWT 발급 시간
-     * jti (JWT ID) : JWT 발급의 Unique ID
+     * 아래는 signed_jwt_create_and_verify_with_registered_fields() 테스트에서 key를
+     * base64Secret으로 추출하지 않고 사용하는 방법입니다. 해당 방법은 간단한 방법이지만 실무에서는
+     * key를 보존해야하는데 그렇지 않기 때문에 사용하기 어려운 방법입니다.
      */
     @Test
     public void signed_jwt_create_and_verify() {
