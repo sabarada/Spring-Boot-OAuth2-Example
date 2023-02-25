@@ -2,10 +2,7 @@
 
 ## 함께 작성된 이론 및 설명 문서
 
-- jwt 관련 이론 [미완성] 
-  - 현재 있지만 새롭게 단독으로 생성 필요
-  - 참조 : spring security에서 본것
-  - jwt : REC-7519 https://www.rfc-editor.org/rfc/rfc7519
+- [[JWT] JWT(Json Web Token)에 대해서 자세히 알아봅시다 - 이론편](https://sabarada.tistory.com/246)
 - jwt 관련 실습 [미완성]
 - OAuth 이론 [미완성]
 - Auth 서버 만들기 실습 [미완성]
@@ -13,8 +10,18 @@
 
 ## 환경 및 의존성 정보
 
-- MySQL
-- Spring Boot
-- kotlin
+- MySQL : 5.7
+- Spring Boot : 2.7.8
+- kotlin : 1.6.21
+- java : 17.0
 - jjwt [https://github.com/jwtk/jjwt]
-- 
+
+## 실행(bootRun) 방법
+
+아래 명령어를 통해 docker container를 실행시킵니다.
+
+container에는 mysql이 포함되어 있습니다.
+
+```bash
+docker compose up -d
+```
