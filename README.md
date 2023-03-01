@@ -3,7 +3,7 @@
 ## 함께 작성된 이론 및 설명 문서
 
 - [[JWT] JWT(Json Web Token)에 대해서 자세히 알아봅시다 - 이론편](https://sabarada.tistory.com/246)
-- jwt 관련 실습 [미완성]
+- [[JWT+JAVA] JWT(Json Web Token)에 대해서 자세히 알아봅시다 - 실습편](https://sabarada.tistory.com/247)
 - OAuth 이론 [미완성]
 - Auth 서버 만들기 실습 [미완성]
 - Resource 서버 만들기 실습 [미완성]
