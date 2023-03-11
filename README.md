@@ -4,7 +4,7 @@
 
 - [[JWT] JWT(Json Web Token)에 대해서 자세히 알아봅시다 - 이론편](https://sabarada.tistory.com/246)
 - [[JWT+JAVA] JWT(Json Web Token)에 대해서 자세히 알아봅시다 - 실습편](https://sabarada.tistory.com/247)
-- OAuth 이론 [미완성]
+- [[OAuth2] OAuth2 개론 - 개요와 Authorization Code Flow](https://sabarada.tistory.com/248)
 - Auth 서버 만들기 실습 [미완성]
 - Resource 서버 만들기 실습 [미완성]
 
