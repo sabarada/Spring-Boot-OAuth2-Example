@@ -19,3 +19,9 @@ tasks.getByName<BootJar>("bootJar") {
 tasks.getByName<Jar>("jar") {
     enabled = false
 }
+
+dependencies {
+    implementation("org.springframework.security:spring-security-oauth2-authorization-server:0.4.1")
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+}
