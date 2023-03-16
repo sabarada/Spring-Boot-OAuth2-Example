@@ -23,4 +23,4 @@ POST http://localhost:9090/oauth2/token
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic Y2xpZW50OnNlY3JldA==
 
-grant_type=authorization_code&client_id=client&client_secret=secret&code=K1xmn07JX8X_VyTt8wy3gJwMf__VcymZ3WwvlT-6e8Z9DAHHl9x0I_kV1l8gWdVTQPxpAQrONzg4fkBuqt-2FwrOy9S-bwagxH-rGhbVIKSwXtsphoXCzgPyKJRHJktR&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client
+grant_type=authorization_code&client_id=client&client_secret=secret&code=eqKdWnRBuuiAf9xtXcXkC8Bz1qbnvVoQFy_p7uMbPRoZF_32e2Cbm6wqQwzm9lZMDtPn04msxxn9XluahPEsaJnUyWTUKgF7USBkNEYW-MWwJAbUpLBG7bXMm1wb1twp&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client

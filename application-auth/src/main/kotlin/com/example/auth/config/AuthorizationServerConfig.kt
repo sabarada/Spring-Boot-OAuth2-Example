@@ -10,10 +10,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -42,6 +40,18 @@ class AuthorizationServerConfig(
     private val properties: AuthorizationServerProperties
 ) {
 
+    /**
+     * OAuth 2.0 인증에 사용되는 Filter
+     * Default Setting을 하고 있으며 Pre, Auth, Post Filter를 설정할 수 있다.
+     *
+     * 대표적으로 설정할 수 있는 값은 아래와 같으며 각각 pre, Auth, post Filter를 가리킨다.
+     *
+     * OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)를 통해서 default 세팅을  진행
+     *
+     * - authorizationRequestConverter(authorizationRequestConverter) // pre-filter
+     * - authenticationProvider(authenticationProvider) // validation
+     * - authorizationResponseHandler(authorizationResponseHandler) // post
+     */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Throws(java.lang.Exception::class)
@@ -49,7 +59,6 @@ class AuthorizationServerConfig(
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http)
 
         http.getConfigurer(OAuth2AuthorizationServerConfigurer::class.java)
-            .authorizationEndpoint(Customizer.withDefaults())
 
         // @formatter:off
         http
@@ -58,7 +67,6 @@ class AuthorizationServerConfig(
                     LoginUrlAuthenticationEntryPoint("/login")
                 )
             }
-            .oauth2ResourceServer { obj: OAuth2ResourceServerConfigurer<HttpSecurity> -> obj.jwt() }
         // @formatter:on
         return http.build()
     }
@@ -74,6 +82,14 @@ class AuthorizationServerConfig(
     }
 
 
+    /**
+     * RegisteredClient는 인증 서버에서 인증을 받을 수 있는 Client 입니다.
+     * 해당 등록이 되어있지 않는 Client는 인증 서버에서 인증을 받을 수 없습니다.
+     * 인증을 통해서 권한을 획득해야 리소스 서버에서 Protected Resource에 접근이 가능합니다.
+     *
+     * 또한 RegisteredClientRepository는 이러한 RegisteredClient를
+     * 보관하고 관리하는 Repository입니다.
+     */
     @Bean
     fun registeredClientRepository(): RegisteredClientRepository {
         val registeredClient = RegisteredClient
@@ -92,6 +108,10 @@ class AuthorizationServerConfig(
         return InMemoryRegisteredClientRepository(registeredClient)
     }
 
+    /**
+     * jwtSource 입니다. Spring Authorization Server 에서 기본으로 연동되는 JwtSource 프로젝트가
+     * com.nimbusds.jose.jwk로 확인이 되었습니다. 별도로 커스터마이징 할 수 있는지 여부는 추가로 확인이 필요합니다.
+     */
     @Bean
     fun jwkSource(): JWKSource<SecurityContext> {
         val keyPair: KeyPair = generateRsaKey()
