@@ -13,7 +13,8 @@
 - MySQL : 5.7
 - Spring Boot : 2.7.8
 - kotlin : 1.6.21
-- java : 17.0
+- java : 17
+- spring-authorization-server : 0.4.1
 - jjwt [https://github.com/jwtk/jjwt]
 
 ## 실행(bootRun) 방법
