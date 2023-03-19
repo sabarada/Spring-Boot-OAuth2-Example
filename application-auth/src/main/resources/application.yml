@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9090
 
 spring:
   datasource:
@@ -11,7 +11,16 @@ spring:
   jpa:
     show-sql: true
 
+  authorization:
+    server:
+      clientId: 'articles-client'
+      clientSecret: '{noop}secret'
+      authenticationRedirectUri: 'http://127.0.0.1:8080/login/oauth2/code/articles-client'
+      successRedirectUri: 'http://127.0.0.1:8080/authorized'
+      scope: 'articles.read'
+
 logging:
   level:
+    org.springframework.security: TRACE
     org.hibernate.type: TRACE
     org.hibernate.type.descriptor.sql.BasicExtractor: INFO

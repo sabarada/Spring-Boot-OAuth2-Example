@@ -1,0 +1,26 @@
+### oauth-authorization-server와 관련된 API path 리스트를 가져오는 API
+### https://datatracker.ietf.org/doc/html/draft-ietf-oauth-discovery-10#section-3 문서의 path를 따르고 있습니다.
+GET http://localhost:9090/.well-known/oauth-authorization-server
+
+### authorization_endpoint
+### 해당 API는 샘플이고 이곳에서 호출하면 정상 동작하지 않습니다.
+### 정상 동작을 보기 위해서는 web에서 호출하여 인증 서버에서 로그인이 필요합니다.
+### 로그인하면 redirect_uri로 이동이 되고 code를 얻을 수 있습니다.
+GET http://localhost:9090/oauth2/authorize?response_type=code&client_id=client&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client&state=xcoiv98y2kd22vusuye3kch
+
+### token_endpoint
+### code를 jwt token으로 교환하는 API 입니다.
+### Basic Auth에 UserId와 Password를 맞춰야합니다.
+### 해당 auth_server에서는 access_token, refresh_toekn, token_type, expires_in으로 4가지의 필드를 가져옵니다.
+# {
+#   "access_token": "eyJraWQiOiIwM2NhZTA0ZS1jNWZjLTQ2MzEtYjY3Zi1lYmJmNWYxNTBjZTUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjbGllbnQiLCJhdWQiOiJjbGllbnQiLCJuYmYiOjE2Nzg4MTQzMjAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MCIsImV4cCI6MTY3ODgxNDYyMCwiaWF0IjoxNjc4ODE0MzIwfQ.J2fyz_27r00b0pnRlEjDaQ4BhqNsG8HcYWV7f2NYrK4pLzsHHfrZGhoLHo3bcL3ulIIFQpsGPE-MUDN1adpp_Nb-9G-K9906lCLQzJYBW8PXB_wWXCL3A6X4Ea9nuDoDVGGYnMGzs9XgLqqiBRdvH9NMV6-YivaZPZG0hIYnWNgU34kH3JGp2uWGJy8ANBEgO8uumIXL2bITEM3IF13wYGrZ_1ToUZeIl1zhOOhtuPBzyGrzTS2hcZQTuVxL_AUEjQG0Db12RoY0fK2ijwZK-w0qaH-P-ooAy-kCn_fb6KEiZ0--qOHdKiIVm0xUSfUpjnk2FS05yCasqxivKYdsqA",
+#   "refresh_token": "LryTiH6aPW4D2mCjixPqfjLqodaZoAGchfUVRU2rIbabRBCTkNIldvznizZsKazrVj8Onz7BsSGOmbGF1Ehn9Js3wkE4klPk12-rvSKcdjRNj_oiRDccg6tZX3MVeByf",
+#   "token_type": "Bearer",
+#   "expires_in": 299
+# }
+
+POST http://localhost:9090/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic Y2xpZW50OnNlY3JldA==
+
+grant_type=authorization_code&client_id=client&client_secret=secret&code=eqKdWnRBuuiAf9xtXcXkC8Bz1qbnvVoQFy_p7uMbPRoZF_32e2Cbm6wqQwzm9lZMDtPn04msxxn9XluahPEsaJnUyWTUKgF7USBkNEYW-MWwJAbUpLBG7bXMm1wb1twp&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client
