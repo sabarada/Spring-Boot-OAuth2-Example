@@ -6,6 +6,7 @@ GET http://localhost:9090/.well-known/oauth-authorization-server
 ### 해당 API는 샘플이고 이곳에서 호출하면 정상 동작하지 않습니다.
 ### 정상 동작을 보기 위해서는 web에서 호출하여 인증 서버에서 로그인이 필요합니다.
 ### 로그인하면 redirect_uri로 이동이 되고 code를 얻을 수 있습니다.
+### 로그인 페이지의 id / password는 client / password 입니다.
 GET http://localhost:9090/oauth2/authorize?response_type=code&client_id=client&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client&state=xcoiv98y2kd22vusuye3kch
 
 ### token_endpoint
@@ -23,4 +24,4 @@ POST http://localhost:9090/oauth2/token
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic Y2xpZW50OnNlY3JldA==
 
-grant_type=authorization_code&client_id=client&client_secret=secret&code=eqKdWnRBuuiAf9xtXcXkC8Bz1qbnvVoQFy_p7uMbPRoZF_32e2Cbm6wqQwzm9lZMDtPn04msxxn9XluahPEsaJnUyWTUKgF7USBkNEYW-MWwJAbUpLBG7bXMm1wb1twp&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client
+grant_type=authorization_code&client_id=client&client_secret=secret&code=zXlPohLkVUYzl5xRapJaEuIwNXGIc60HPWGnObtvbioGLP81jCOHRJ4QFnjEi8f-jIOkT5i1re2AQBkfOAw9K6ADOVCMvTS3d9_qr8urCQc4DlA94FiCgNopZwQgNKD9&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/articles-client

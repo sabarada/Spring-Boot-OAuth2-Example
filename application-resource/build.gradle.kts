@@ -19,3 +19,7 @@ tasks.getByName<BootJar>("bootJar") {
 tasks.getByName<Jar>("jar") {
     enabled = false
 }
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+}
