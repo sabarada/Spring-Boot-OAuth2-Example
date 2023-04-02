@@ -143,8 +143,8 @@ class AuthorizationServerConfig(
 
     @Bean
     fun authorizationServerSettings(): AuthorizationServerSettings {
-        return AuthorizationServerSettings.builder().build()
+        return AuthorizationServerSettings.builder()
+            .issuer("http://localhost:9090")
+            .build()
     }
-
-
 }
